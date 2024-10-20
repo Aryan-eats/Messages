@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messaging App</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        function sendMessage() {
+            const senderId = document.getElementById('senderId').value;
+            const receiverId = document.getElementById('receiverId').value;
+            const message = document.getElementById('message').value;
+
+            socket.emit('private message', { senderId, receiverId, message });
+        }
+
+        socket.on('private message', (data) => {
+            const messagesDiv = document.getElementById('messages');
+            const messageElem = document.createElement('div');
+            messageElem.textContent = `From ${data.senderId}: ${data.message}`;
+            messagesDiv.appendChild(messageElem);
+        });
+    </script>
+</head>
+<body>
+    <h1>Messaging App</h1>
+    <input type="text" id="senderId" placeholder="Your ID" />
+    <input type="text" id="receiverId" placeholder="Receiver ID" />
+    <input type="text" id="message" placeholder="Enter message" />
+    <button onclick="sendMessage()">Send</button>
+    <div id="messages"></div>
+</body>
+</html>
